@@ -2,7 +2,7 @@ name: sync upstream dev
 
 on:
   schedule:
-    - cron: "*/30 * * * *" # alle 30 Minuten
+    - cron: "*/960 * * * *" # alle 30 Minuten
   workflow_dispatch:
 
 permissions:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout fork
         uses: actions/checkout@v4
         with:
-          ref: dev
+          ref: master
           fetch-depth: 0
 
       - name: Configure git
@@ -26,17 +26,17 @@ jobs:
 
       - name: Add upstream and fetch
         run: |
-          git remote add upstream https://github.com/<OFFIZIELLES_ORG_ODER_USER>/opencode.git
-          git fetch upstream dev
+          git remote add upstream https://github.com/anomalyco/opencode.git
+          git fetch upstream master
 
       - name: Merge upstream/dev into dev
         run: |
-          git checkout dev
-          git merge --no-edit upstream/dev || {
+          git checkout master
+          git merge --no-edit upstream/master || {
             echo "Merge conflict detected, aborting."
             git merge --abort
             exit 1
           }
 
       - name: Push changes
-        run: git push origin dev
+        run: git push origin master
